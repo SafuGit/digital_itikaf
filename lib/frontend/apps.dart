@@ -24,67 +24,77 @@ class _AppsScreenState extends State<AppsScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Blocked Apps",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w900,
-              color: isDark ? AppTheme.textDark : AppTheme.textLight,
-            ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            "Focusing on your spiritual journey",
-            style: TextStyle(fontSize: 14, color: Colors.grey),
-          ),
-          SizedBox(height: 16),
-          Expanded(
-            child: BlocBuilder<BlockedAppsBloc, BlockedAppsStates>(
-              builder: (context, state) {
-                if (state is BlockedAppsLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is BlockedAppsLoaded) {
-                  final apps = state.blockedApps;
 
-                  if (apps.isEmpty) {
-                    return const Center(child: Text("No blocked apps found."));
-                  }
+    return BlocBuilder<BlockedAppsBloc, BlockedAppsStates>(
+      builder: (context, state) {
+        if (state is BlockedAppsLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is BlockedAppsLoaded) {
+          final apps = state.blockedApps;
 
-                  return ListView.builder(
-                    itemCount: apps.length,
-                    itemBuilder: (context, index) {
-                      final app = apps[index];
-
-                      return BlockedAppCard(
-                        appName: app.appName,
-                        packageName: app.packageName,
-                        isBlocked: app.isBlocked,
-                        icon: app.iconBytes != null
-                            ? Image.memory(
-                                app.iconBytes!,
-                                width: 24,
-                                height: 24,
-                              )
-                            : const Icon(Icons.apps),
-                        onToggle: (val) {
-                          // Handle toggle later (update Hive + Bloc)
-                        },
-                      );
-                    },
-                  );
-                } else {
-                  return const SizedBox();
-                }
-              },
-            ),
-          ),
-        ],
-      ),
+          return CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Blocked Apps",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w900,
+                          color: isDark
+                              ? AppTheme.textDark
+                              : AppTheme.textLight,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        "Focusing on your spiritual journey",
+                        style: TextStyle(fontSize: 14, color: Colors.grey),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                ),
+              ),
+              apps.isEmpty
+                  ? SliverFillRemaining(
+                      child: const Center(
+                        child: Text("No blocked apps found."),
+                      ),
+                    )
+                  : SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final app = apps[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 24, right: 24),
+                          child: BlockedAppCard(
+                            appName: app.appName,
+                            packageName: app.packageName,
+                            isBlocked: app.isBlocked,
+                            icon: app.iconBytes != null
+                                ? Image.memory(
+                                    app.iconBytes!,
+                                    width: 24,
+                                    height: 24,
+                                  )
+                                : const Icon(Icons.apps),
+                            onToggle: (val) {
+                              // handle toggle
+                            },
+                          ),
+                        );
+                      }, childCount: apps.length),
+                    ),
+            ],
+          );
+        } else {
+          return const SizedBox();
+        }
+      },
     );
   }
 }
