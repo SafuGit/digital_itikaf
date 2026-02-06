@@ -2,7 +2,10 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digital_itikaf/bloc/itikaf_status/bloc.dart';
 import 'package:digital_itikaf/bloc/itikaf_status/itikaf_status_events.dart';
 import 'package:digital_itikaf/bloc/itikaf_status/itikaf_status_state.dart';
+import 'package:digital_itikaf/models/blocked_apps.dart';
 import 'package:digital_itikaf/models/itikaf_status.dart';
+import 'package:digital_itikaf/util/add_default_blocked_apps.dart';
+import 'package:digital_itikaf/util/check_itikaf_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
@@ -15,19 +18,15 @@ void main() async {
   await Hive.initFlutter(dir.path);
 
   Hive.registerAdapter(ItikafStatusAdapter());
+  Hive.registerAdapter(BlockedAppAdapter());
   final itikafStatusBox = await Hive.openBox<ItikafStatus>("itikafStatus");
+  final blockedAppsBox = await Hive.openBox<BlockedApp>("blockedApps");
 
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
 
-  if (itikafStatusBox.get(androidInfo.id) == null) {
-    final defaultStatus = ItikafStatus(
-      name: androidInfo.id,
-      isActive: false,
-      startTime: DateTime.now(),
-    );
-    await itikafStatusBox.put(androidInfo.id, defaultStatus);
-  }
+  await checkItikafStatus(itikafStatusBox, androidInfo);
+  await addDefaultBlockedApps(blockedAppsBox);
 
   runApp(MainApp(itikafStatusBox: itikafStatusBox, deviceId: androidInfo.id));
 }
