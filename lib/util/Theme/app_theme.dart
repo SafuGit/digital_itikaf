@@ -3,11 +3,20 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static const Color primary = Color(0xFF11D442);
+  static const Color accentGreen = Color(0xFF22C55E);
   static const Color accentGold = Color(0xFFD4AF37);
   static const Color backgroundLight = Color(0xFFF6F8F6);
   static const Color backgroundDark = Color(0xFF0A110C);
   static const Color textLight = Colors.black87;
   static const Color textDark = Colors.white;
+
+  static const Color darkBackground = Color(0xFF0B0F0D);
+  static const Color darkGlowGreen = Color(0xFF22C55E);
+  static const Color darkText = Color(0xFFE6F4EA);
+
+  static const Color lightBackground = Color(0xFFF7FAF8);
+  static const Color lightGlowGreen = Color(0xFF16A34A);
+  static const Color lightText = Color(0xFF0F172A);
 
   static ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
@@ -60,17 +69,13 @@ class AppTheme {
     cardTheme: CardThemeData(
       color: Colors.white,
       elevation: 6,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primary,
         foregroundColor: backgroundDark,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         textStyle: GoogleFonts.lexend(
           fontWeight: FontWeight.bold,
           fontSize: 16,
@@ -130,17 +135,13 @@ class AppTheme {
     cardTheme: CardThemeData(
       color: Color(0xFF121212),
       elevation: 6,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primary,
         foregroundColor: backgroundLight,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         textStyle: GoogleFonts.lexend(
           fontWeight: FontWeight.bold,
           fontSize: 16,
@@ -148,4 +149,84 @@ class AppTheme {
       ),
     ),
   );
+}
+
+class AdaptiveGlowBackground extends StatelessWidget {
+  final Widget child;
+
+  const AdaptiveGlowBackground({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final baseColor = isDark
+        ? AppTheme.darkBackground
+        : AppTheme.lightBackground;
+
+    final glowColor = isDark
+        ? AppTheme.darkGlowGreen
+        : AppTheme.lightGlowGreen;
+
+    final glow1 = isDark ? 0.18 : 0.12;
+    final glow2 = isDark ? 0.12 : 0.08;
+    final glow3 = isDark ? 0.08 : 0.05;
+
+    return Stack(
+      children: [
+        // Base
+        Container(color: baseColor),
+
+        // Primary glow (top-left)
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                center: const Alignment(-0.85, -0.65),
+                radius: 1.0,
+                colors: [
+                  glowColor.withOpacity(glow1),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // Secondary glow (bottom-right)
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                center: const Alignment(0.8, 0.7),
+                radius: 1.2,
+                colors: [
+                  glowColor.withOpacity(glow2),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // Ambient center glow (very soft)
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                center: Alignment.center,
+                radius: 1.6,
+                colors: [
+                  glowColor.withOpacity(glow3),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        child,
+      ],
+    );
+  }
 }

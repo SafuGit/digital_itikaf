@@ -1,5 +1,6 @@
 import 'package:digital_itikaf/util/Shared/bottom_bar.dart';
 import 'package:digital_itikaf/util/Shared/top_bar.dart';
+import 'package:digital_itikaf/util/Theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class RouteWrapper extends StatelessWidget {
@@ -11,7 +12,9 @@ class RouteWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const TopBar(),
-      body: child,
+      body: AdaptiveGlowBackground(
+        child: child,
+      ),
       bottomNavigationBar: const BottomBar(),
     );
   }

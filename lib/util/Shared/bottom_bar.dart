@@ -23,7 +23,12 @@ class _BottomBarState extends State<BottomBar> {
     setState(() {
       _selectedIndex = index;
     });
-    // TODO: Navigate to screens
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, '/');
+      case 1:
+        Navigator.pushNamed(context, '/apps');
+    }
   }
 
   @override
