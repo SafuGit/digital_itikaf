@@ -1,13 +1,15 @@
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 class ItikafStatus {
+  final String name;
   final bool isActive;
   final DateTime startTime;
   final DateTime? endTime;
 
-  ItikafStatus({required this.isActive, required this.startTime, this.endTime});
+  ItikafStatus({required this.name, required this.isActive, required this.startTime, this.endTime});
 
   factory ItikafStatus.fromJson(Map<String, dynamic> json) => ItikafStatus(
+    name: json["name"] as String,
     isActive: json["isActive"] as bool,
     startTime: DateTime.parse(json["startTime"] as String),
     endTime: json["endTime"] != null
@@ -16,6 +18,7 @@ class ItikafStatus {
   );
 
   Map<String, dynamic> toJson() => {
+    'name': name,
     'isActive': isActive,
     'startTime': startTime,
     'endTime': endTime,
@@ -28,6 +31,7 @@ class ItikafStatusAdapter extends TypeAdapter<ItikafStatus> {
 
   @override
   ItikafStatus read(BinaryReader reader) {
+    final name = reader.readString();
     final isActive = reader.readBool();
     final startTime = DateTime.parse(reader.readString());
     final endTimeString = reader.readString();
@@ -35,6 +39,7 @@ class ItikafStatusAdapter extends TypeAdapter<ItikafStatus> {
         ? DateTime.parse(endTimeString)
         : null;
     return ItikafStatus(
+      name: name,
       isActive: isActive,
       startTime: startTime,
       endTime: endTime,
@@ -43,6 +48,7 @@ class ItikafStatusAdapter extends TypeAdapter<ItikafStatus> {
 
   @override
   void write(BinaryWriter writer, ItikafStatus obj) {
+    writer.writeString(obj.name);
     writer.writeBool(obj.isActive);
     writer.writeString(obj.startTime.toIso8601String());
     writer.writeString(obj.endTime?.toIso8601String() ?? '');

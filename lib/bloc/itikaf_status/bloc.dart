@@ -16,5 +16,10 @@ class ItikafStatusBloc extends Bloc<ItikafStatusEvents, ItikafStatusState> {
         emit(ItikafStatusLoaded(status));
       }
     });
+
+    on<AddNewStatus>((event, emit) {
+      itikafStatusBox.add(event.status);
+      add(LoadStatus(event.status.name));
+    });
   }
 }
