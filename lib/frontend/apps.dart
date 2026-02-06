@@ -14,11 +14,25 @@ class AppsScreen extends StatefulWidget {
 }
 
 class _AppsScreenState extends State<AppsScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = "";
+
   @override
   void initState() {
     super.initState();
 
     context.read<BlockedAppsBloc>().add(LoadBlockedApps());
+    _searchController.addListener(() {
+      setState(() {
+        _searchQuery = _searchController.text.toLowerCase();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -31,6 +45,12 @@ class _AppsScreenState extends State<AppsScreen> {
           return const Center(child: CircularProgressIndicator());
         } else if (state is BlockedAppsLoaded) {
           final apps = state.blockedApps;
+          final filteredApps = apps.where((app) {
+            final name = app.appName.toLowerCase();
+            final package = app.packageName.toLowerCase();
+            return name.contains(_searchQuery) ||
+                package.contains(_searchQuery);
+          }).toList();
 
           return CustomScrollView(
             slivers: [
@@ -55,20 +75,34 @@ class _AppsScreenState extends State<AppsScreen> {
                         "Focusing on your spiritual journey",
                         style: TextStyle(fontSize: 14, color: Colors.grey),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: "Search apps...",
+                          prefixIcon: const Icon(Icons.search),
+                          filled: true,
+                          fillColor: isDark
+                              ? AppTheme.backgroundDark.withOpacity(0.3)
+                              : AppTheme.backgroundLight.withOpacity(0.7),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
-              apps.isEmpty
+
+              filteredApps.isEmpty
                   ? SliverFillRemaining(
-                      child: const Center(
-                        child: Text("No blocked apps found."),
-                      ),
+                      child: const Center(child: Text("No apps found.")),
                     )
                   : SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
-                        final app = apps[index];
+                        final app = filteredApps[index];
                         return Padding(
                           padding: const EdgeInsets.only(left: 24, right: 24),
                           child: BlockedAppCard(
@@ -87,7 +121,7 @@ class _AppsScreenState extends State<AppsScreen> {
                             },
                           ),
                         );
-                      }, childCount: apps.length),
+                      }, childCount: filteredApps.length),
                     ),
             ],
           );
