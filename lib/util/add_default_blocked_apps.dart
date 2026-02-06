@@ -3,11 +3,11 @@ import 'package:flutter_device_apps/flutter_device_apps.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 final defaultApps = [
-  BlockedApp(packageName: 'com.instagram.android', appName: 'Instagram'),
-  BlockedApp(packageName: 'com.google.android.youtube', appName: 'YouTube'),
-  BlockedApp(packageName: 'com.twitter.android', appName: 'Twitter'),
-  BlockedApp(packageName: 'com.snapchat.android', appName: 'Snapchat'),
-  BlockedApp(packageName: 'com.discord', appName: 'Discord'),
+  BlockedApp(packageName: 'com.instagram.android', appName: 'Instagram', isBlocked: true),
+  BlockedApp(packageName: 'com.google.android.youtube', appName: 'YouTube', isBlocked: true),
+  BlockedApp(packageName: 'com.twitter.android', appName: 'Twitter', isBlocked: true),
+  BlockedApp(packageName: 'com.snapchat.android', appName: 'Snapchat', isBlocked: true),
+  BlockedApp(packageName: 'com.discord', appName: 'Discord', isBlocked: true),
 ];
 
 Future<void> addDefaultBlockedApps(Box<BlockedApp> appsBox) async {
