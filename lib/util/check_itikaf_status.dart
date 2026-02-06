@@ -1,5 +1,5 @@
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:digital_itikaf/models/itikaf_status.dart';
+import 'package:digital_itikaf/backend/models/itikaf_status.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 Future<String> checkItikafStatus(

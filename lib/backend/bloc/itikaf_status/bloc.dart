@@ -1,6 +1,6 @@
-import 'package:digital_itikaf/bloc/itikaf_status/itikaf_status_events.dart';
-import 'package:digital_itikaf/bloc/itikaf_status/itikaf_status_state.dart';
-import 'package:digital_itikaf/models/itikaf_status.dart';
+import 'package:digital_itikaf/backend/bloc/itikaf_status/itikaf_status_events.dart';
+import 'package:digital_itikaf/backend/bloc/itikaf_status/itikaf_status_state.dart';
+import 'package:digital_itikaf/backend/models/itikaf_status.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 

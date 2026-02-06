@@ -1,4 +1,4 @@
-import 'package:digital_itikaf/models/itikaf_status.dart';
+import 'package:digital_itikaf/backend/models/itikaf_status.dart';
 
 abstract class ItikafStatusEvents {}
 

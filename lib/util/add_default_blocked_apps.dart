@@ -1,4 +1,4 @@
-import 'package:digital_itikaf/models/blocked_apps.dart';
+import 'package:digital_itikaf/backend/models/blocked_apps.dart';
 import 'package:flutter_device_apps/flutter_device_apps.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
