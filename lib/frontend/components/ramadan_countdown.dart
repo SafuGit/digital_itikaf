@@ -43,31 +43,34 @@ class _RamadanCountdownState extends State<RamadanCountdown> {
     final seconds = remaining.inSeconds % 60;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _timeBox(days, 'Days'),
-            const SizedBox(width: 8),
-            _timeBox(hours, 'Hours'),
-            const SizedBox(width: 8),
-            _timeBox(minutes, 'Mins'),
-            const SizedBox(width: 8),
-            _timeBox(seconds, 'Secs'),
-          ],
-        ),
-        const SizedBox(height: 6),
-        Text(
-          'Remaining in Ramadan',
-          style: TextStyle(
-            fontSize: 12,
-            color: isDark ? AppTheme.textDark : AppTheme.textLight,
-            fontWeight: FontWeight.w300,
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _timeBox(days, 'Days'),
+              const SizedBox(width: 8),
+              _timeBox(hours, 'Hours'),
+              const SizedBox(width: 8),
+              _timeBox(minutes, 'Mins'),
+              const SizedBox(width: 8),
+              _timeBox(seconds, 'Secs'),
+            ],
           ),
-        ),
-      ],
+          const SizedBox(height: 6),
+          Text(
+            'Remaining in Ramadan',
+            style: TextStyle(
+              fontSize: 24,
+              color: isDark ? AppTheme.textDark : AppTheme.textLight,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
