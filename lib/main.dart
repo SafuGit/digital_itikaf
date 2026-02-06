@@ -1,4 +1,5 @@
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:digital_itikaf/backend/bloc/blocked_apps/bloc.dart';
 import 'package:digital_itikaf/backend/bloc/itikaf_status/bloc.dart';
 import 'package:digital_itikaf/backend/bloc/itikaf_status/itikaf_status_events.dart';
 import 'package:digital_itikaf/backend/models/blocked_apps.dart';
@@ -29,20 +30,35 @@ void main() async {
   await checkItikafStatus(itikafStatusBox, androidInfo);
   await addDefaultBlockedApps(blockedAppsBox);
 
-  runApp(MainApp(itikafStatusBox: itikafStatusBox, deviceId: androidInfo.id));
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => BlockedAppsBloc(blockedAppsBox)),
+        BlocProvider(create: (_) => ItikafStatusBloc(itikafStatusBox))
+      ],
+      child: MainApp(
+        itikafStatusBox: itikafStatusBox,
+        deviceId: androidInfo.id,
+      ),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
   final Box<ItikafStatus> itikafStatusBox;
   final String deviceId;
-  
-  const MainApp({super.key, required this.itikafStatusBox, required this.deviceId});
+
+  const MainApp({
+    super.key,
+    required this.itikafStatusBox,
+    required this.deviceId,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ItikafStatusBloc(itikafStatusBox)
-        ..add(LoadStatus(deviceId)),
+      create: (context) =>
+          ItikafStatusBloc(itikafStatusBox)..add(LoadStatus(deviceId)),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Digital I'tikaf",
