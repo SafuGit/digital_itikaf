@@ -4,6 +4,7 @@ import 'package:digital_itikaf/bloc/itikaf_status/itikaf_status_events.dart';
 import 'package:digital_itikaf/bloc/itikaf_status/itikaf_status_state.dart';
 import 'package:digital_itikaf/models/blocked_apps.dart';
 import 'package:digital_itikaf/models/itikaf_status.dart';
+import 'package:digital_itikaf/util/Theme/app_theme.dart';
 import 'package:digital_itikaf/util/add_default_blocked_apps.dart';
 import 'package:digital_itikaf/util/check_itikaf_status.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,11 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: "Digital I'tikaf",
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
       home: BlocProvider(
         create: (context) => ItikafStatusBloc(itikafStatusBox)
           ..add(LoadStatus(deviceId)),
