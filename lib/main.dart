@@ -1,14 +1,15 @@
+import 'package:digital_itikaf/models/itikaf_status.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final dir = await getApplicationDocumentsDirectory();
-  Hive.init(dir.path);
+  await Hive.initFlutter(dir.path);
 
-  
+  Hive.registerAdapter(ItikafStatusAdapter());
 
   runApp(const MainApp());
 }
