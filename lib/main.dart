@@ -1,6 +1,7 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digital_itikaf/bloc/itikaf_status/bloc.dart';
 import 'package:digital_itikaf/bloc/itikaf_status/itikaf_status_events.dart';
+import 'package:digital_itikaf/bloc/itikaf_status/itikaf_status_state.dart';
 import 'package:digital_itikaf/models/itikaf_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,9 +44,30 @@ class MainApp extends StatelessWidget {
       home: BlocProvider(
         create: (context) => ItikafStatusBloc(itikafStatusBox)
           ..add(LoadStatus(deviceId)),
-        child: const Scaffold(
+        child: Scaffold(
           body: Center(
-            child: Text('Hello World!'),
+            child: BlocBuilder<ItikafStatusBloc, ItikafStatusState>(
+              builder: (context, state) {
+                if (state is ItikafStatusLoading) {
+                  return const CircularProgressIndicator();
+                } else if (state is ItikafStatusLoaded) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Device ID: ${state.itikafStatus.name}'),
+                      const SizedBox(height: 16),
+                      Text('Is Active: ${state.itikafStatus.isActive}'),
+                      const SizedBox(height: 16),
+                      Text('Start Time: ${state.itikafStatus.startTime}'),
+                    ],
+                  );
+                } else if (state is ItikafStatusNotFound) {
+                  return const Text('Status not found');
+                } else {
+                  return const Text('Unknown state');
+                }
+              },
+            ),
           ),
         ),
       ),
