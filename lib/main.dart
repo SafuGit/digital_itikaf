@@ -4,6 +4,7 @@ import 'package:digital_itikaf/backend/bloc/itikaf_status/itikaf_status_events.d
 import 'package:digital_itikaf/backend/bloc/itikaf_status/itikaf_status_state.dart';
 import 'package:digital_itikaf/backend/models/blocked_apps.dart';
 import 'package:digital_itikaf/backend/models/itikaf_status.dart';
+import 'package:digital_itikaf/util/Shared/bottom_bar.dart';
 import 'package:digital_itikaf/util/Theme/app_theme.dart';
 import 'package:digital_itikaf/util/add_default_blocked_apps.dart';
 import 'package:digital_itikaf/util/check_itikaf_status.dart';
@@ -74,6 +75,7 @@ class MainApp extends StatelessWidget {
               },
             ),
           ),
+          bottomNavigationBar: BottomBar(),
         ),
       ),
     );
