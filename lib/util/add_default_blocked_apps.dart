@@ -14,21 +14,34 @@ Future<void> addDefaultBlockedApps(Box<BlockedApp> appsBox) async {
   final installedApps = await FlutterDeviceApps.listApps(
     includeSystem: true,
     onlyLaunchable: true,
-    includeIcons: false,
+    includeIcons: true,
   );
 
   for (var defaultApp in defaultApps) {
-    bool exists = installedApps.any(
+    final installedApp = installedApps.firstWhere(
       (app) => app.packageName == defaultApp.packageName,
+      orElse: () => AppInfo(
+        appName: 'Unknown',
+        packageName: 'unknown.package',
+        versionName: '',
+        versionCode: 0,
+      ),
     );
 
-    if (exists) {
+    if (installedApp.packageName != 'unknown.package') {
       bool alreadyAdded = appsBox.values.any(
         (a) => a.packageName == defaultApp.packageName,
       );
 
       if (!alreadyAdded) {
-        appsBox.add(defaultApp);
+        final blockedAppWithIcon = BlockedApp(
+          packageName: defaultApp.packageName,
+          appName: defaultApp.appName,
+          isBlocked: defaultApp.isBlocked,
+          iconBytes: installedApp.iconBytes,
+        );
+
+        await appsBox.add(blockedAppWithIcon);
         print('${defaultApp.appName} added to blocked apps');
       }
     } else {
