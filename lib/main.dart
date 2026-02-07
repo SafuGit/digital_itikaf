@@ -30,35 +30,31 @@ void main() async {
   await checkItikafStatus(itikafStatusBox, androidInfo);
   await addDefaultBlockedApps(blockedAppsBox);
 
-  runApp(
-    MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => BlockedAppsBloc(blockedAppsBox)),
-        BlocProvider(create: (_) => ItikafStatusBloc(itikafStatusBox))
-      ],
-      child: MainApp(
-        itikafStatusBox: itikafStatusBox,
-        deviceId: androidInfo.id,
-      ),
-    ),
-  );
+  runApp(MainApp(itikafStatusBox: itikafStatusBox, deviceId: androidInfo.id, blockedAppsBox: blockedAppsBox,));
 }
 
 class MainApp extends StatelessWidget {
   final Box<ItikafStatus> itikafStatusBox;
+  final Box<BlockedApp> blockedAppsBox;
   final String deviceId;
 
   const MainApp({
     super.key,
     required this.itikafStatusBox,
+    required this.blockedAppsBox,
     required this.deviceId,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          ItikafStatusBloc(itikafStatusBox)..add(LoadStatus(deviceId)),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              ItikafStatusBloc(itikafStatusBox)..add(LoadStatus(deviceId)),
+        ),
+        BlocProvider(create: (context) => BlockedAppsBloc(blockedAppsBox))
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Digital I'tikaf",
